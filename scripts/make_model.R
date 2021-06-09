@@ -53,6 +53,7 @@ if (any(Im(A_sm) > 1e-8)) {
   cat("This cube root is not real!")
   A_sm <- Re(A_sm)
 }
+A_sm[A_new == 0] <- 0
 
 # Define a quarterly state space form -------------------------------------
 
@@ -85,6 +86,8 @@ A_m <- rbind(
   c(0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
   c(0, 0, 0, 0, 0, 0, 0, 0, 1, 0)
 )
+
+
 
 # Derive monthly equivalent of matrix B (see GMR, 2016)
 BminMonthly <- solve((A_sm %*% A_sm) + A_sm + diag(nrow(A_sm))) %*% B_new
