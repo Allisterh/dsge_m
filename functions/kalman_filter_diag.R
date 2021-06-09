@@ -81,14 +81,14 @@ kalman_filter_diag <- function(y, A, C, Q, R, init_x, init_V, ...) {
       initial <- 0
     }
     if (all(is.na(u))) {
-      res_ku_diag <- kalman_update_diag(A[,,m], C[,,m], Q[,,m], R[,,m], y[,t], prevx, prevV, "initial", initial)
+      res_ku_diag <- kalman_update_diag(A, C, Q, R[,,m], y[,t], prevx, prevV, "initial", initial)
       x[,t] <- res_ku_diag$xnew
       V[,,t] <- res_ku_diag$Vnew
       LL <- res_ku_diag$loglik
       VV[,,t] <- res_ku_diag$VVnew
     } else {
       if (all(is.na(ndx))) {
-        res_ku_diag <- kalman_update_diag(A[,,m], C[,,m], Q[,,m], R[,,m], y[,t], prevx, prevV, 'initial', initial, 'u', u[,t], 'B', B[,,m])
+        res_ku_diag <- kalman_update_diag(A, C, Q, R[,,m], y[,t], prevx, prevV, 'initial', initial, 'u', u[,t], 'B', B)
         x[,t] <- res_ku_diag$xnew
         V[,,t] <- res_ku_diag$Vnew
         LL <- res_ku_diag$loglik
@@ -100,7 +100,7 @@ kalman_filter_diag <- function(y, A, C, Q, R, init_x, init_V, ...) {
         prevP <- solve(prevV)
         prevPsmall <- prevP[i,i]
         prevVsmall <- solve(prevPsmall)
-        res_ku_diag <- kalman_update_diag(A[i,i,m], C[,i,m], Q[i,i,m], R[,,3], y[,t], prevx[i], prevVsmall, 'initial', initial, 'u', u[,t], 'B', B[i,,m])
+        res_ku_diag <- kalman_update_diag(A[i,i], C[,i], Q[i,i], R[,,m], y[,t], prevx[i], prevVsmall, 'initial', initial, 'u', u[,t], 'B', B[i,])
         x[i,t] <- res_ku_diag$xnew
         smallV <- res_ku_diag$Vnew
         LL <- res_ku_diag$loglik
