@@ -11,7 +11,11 @@ standardize_data <- function(data, nfcst) {
   # "data_std" - a standardized dataset
   
   # Remove an observation of GDP which we will nowcast
-  data$dyobs[nrow(data)] = NA
+  if (month(data$date[nrow(data)]) %% 3 == 0) {
+    data$dyobs[nrow(data)] <- NA
+  } else if ((month(data$date[nrow(data)]) - 1) %% 3 == 0) {
+    data$dyobs[nrow(data) - 1] <- NA
+  } else {}
   
   # Store values of mean and std (monthly dataset)
   params <- data %>% 
