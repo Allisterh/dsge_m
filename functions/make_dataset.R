@@ -1,4 +1,5 @@
 make_dataset <- function(xlsx_file) {
+  
   # A function for importing xlsx file w/ initial data and make it suitable
   # for estimation in the model
   #
@@ -67,7 +68,7 @@ make_dataset <- function(xlsx_file) {
     relocate(date)
   
   # Save the result as .Rds file
-  save(data, file = "data/data.Rds")
+  # save(data, file = "data/data.Rds")
   
   return(data)
   
