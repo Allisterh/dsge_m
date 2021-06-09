@@ -55,12 +55,12 @@ kalman_smoother_diag <- function(y, A, C, Q, R, init_x, init_V, ...) {
   for (t in (TT-1):1) {
     m <- model[t+1]
     if (all(is.na(B))) {
-      res_sm_update <- smooth_update(xsmooth[,t+1], Vsmooth[,,t+1], xfilt[,t], Vfilt[,,t], Vfilt[,,t+1], VVfilt[,,t+1], A[,,m], Q[,,m], matrix(), matrix())
+      res_sm_update <- smooth_update(xsmooth[,t+1], Vsmooth[,,t+1], xfilt[,t], Vfilt[,,t], Vfilt[,,t+1], VVfilt[,,t+1], A, Q, matrix(), matrix())
       xsmooth[,t] <- res_sm_update$xsmooth
       Vsmooth[,,t] <- res_sm_update$Vsmooth
       VVsmooth[,,t+1] <- res_sm_update$VVsmooth_future
     } else {
-      res_sm_update <- smooth_update(xsmooth[,t+1], Vsmooth[,,t+1], xfilt[,t], Vfilt[,,t], Vfilt[,,t+1], VVfilt[,,t+1], A[,,m], Q[,,m], B[,,m], u[,t+1])
+      res_sm_update <- smooth_update(xsmooth[,t+1], Vsmooth[,,t+1], xfilt[,t], Vfilt[,,t], Vfilt[,,t+1], VVfilt[,,t+1], A, Q, B, u[,t+1])
       xsmooth[,t] <- res_sm_update$xsmooth
       Vsmooth[,,t] <- res_sm_update$Vsmooth
       VVsmooth[,,t+1] <- res_sm_update$VVsmooth_future
