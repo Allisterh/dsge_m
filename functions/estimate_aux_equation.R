@@ -39,19 +39,31 @@ estimate_aux_equation <- function(df_monthly, df_quarterly, dsge_m, dsge_q) {
   R <- diag((t(Xq_std) %*% Xq_std) - (t(Xq_std) %*% Yq_std %*% t(Gamma))) / nrow(Xq_std)
   
   # Adding R to the models
-  dsge_m$R <- diag(c(rep(1e-4, nrow(dsge_q$C)), unname(R)))
+  dsge_m$R <- diag(c(rep(1e+32, nrow(dsge_q$C)), unname(R)))
   dsge_m$R <- array(dsge_m$R, dim = c(nrow(dsge_m$R), ncol(dsge_m$R), nrow(df_monthly)))
-  dsge_q$R <- diag(c(rep(1e-4, nrow(dsge_q$C), nrow(dsge_q$C))))
+  dsge_q$R <- diag(c(rep(1e+32, nrow(dsge_q$C), nrow(dsge_q$C))))
   dsge_q$R <- array(dsge_q$R, dim = c(nrow(dsge_q$C), nrow(dsge_q$C), nrow(df_quarterly)))
   
+  temp <- df_monthly %>% 
+    mutate_all(na_if, 0)
+  
+  ddf <- matrix(c(rep(1e-4, nrow(dsge_q$C)), unname(R)), nrow(df_monthly), ncol(df_monthly), byrow = TRUE)
+  ddf[is.na(unname(temp))] <- 1e+32
+
   # Change R in monthly models
   for (i in 1:nrow(df_monthly)) {
-    if (i %% 3 != 0) {
-      dsge_m$R[,,i] <- diag(c(rep(1e+32, nrow(dsge_q$C)), unname(R)))
-    }
-    else {
-      dsge_m$R[,,i] <- diag(c(rep(1e-4, nrow(dsge_q$C)), unname(R)))
-    }
+    dsge_m$R[,,i] <- diag(ddf[i,])
+  }
+  
+  temp <- df_quarterly %>% 
+    mutate_all(na_if, 0)
+  
+  ddf <- matrix(rep(1e-4, nrow(dsge_q$C)), nrow(df_quarterly), ncol(df_quarterly), byrow = TRUE)
+  ddf[is.na(unname(temp))] <- 1e+32
+  
+  # Change R in monthly models
+  for (i in 1:nrow(df_quarterly)) {
+    dsge_q$R[,,i] <- diag(ddf[i,])
   }
   
   res <- list(dsge_m = dsge_m, dsge_q = dsge_q)
