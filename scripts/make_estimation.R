@@ -1,17 +1,18 @@
 # Preliminary part --------------------------------------------------------
 
 # Load functions
+source("functions/make_dataset.R")
 source("functions/kalman_smoother_diag.R")
 
 # Read monthly and quarterly models' matrices
 load("data/dsge_q.Rds") # quarterly model
 load("data/dsge_m.Rds") # monthly model
 
-# Read dataset from .Rds file
-load("data/data.Rds")
-
 # Set a threshold (for estimation)
 threshold <- "2011-03-01"
+
+"data/data_dsge_m.xlsx" %>% 
+  make_dataset()
 
 # Create standardized dataset for Kalman filtering ------------------------
 
